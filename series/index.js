@@ -1,17 +1,15 @@
 
+
 const axios = require('axios')
 const express = require('express')
 const app = express()
 
-//middleware
 app.use(express.json())
 
 let id = 1
 const series = {}
 
-//Criar uma série
-//POST /series
-app.post('/series', (req, res) => {
+app.post('/series', async (req, res) => {
   const titulo = req.body.titulo
   const plataforma = req.body.plataforma
 
@@ -31,12 +29,24 @@ app.post('/series', (req, res) => {
   series[id] = serie
   id++
 
+  await axios.post('http://localhost:10000/eventos', {
+    tipo: 'SerieCriada',
+    dados: serie
+  })
+
   res.status(201).send(serie)
 })
-
-
 app.get('/series', function(req, res){
   res.json(series)
+})
+
+app.post('/eventos', (req, res) => {
+  try{
+    const evento = req.body
+    console.log(evento.tipo)
+  }
+  catch(e){}
+  res.end()
 })
 
 const port = 4000

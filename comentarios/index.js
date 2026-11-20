@@ -8,7 +8,7 @@ app.use(express.json())
 
 const comentariosPorSerieId = {}
 
-app.post('/series/:id/comentarios', (req, res) => {
+app.post('/series/:id/comentarios', async (req, res) => {
   const idComentario = uuidv4()
   const { texto } = req.body
 
@@ -22,11 +22,25 @@ app.post('/series/:id/comentarios', (req, res) => {
   comentariosDaSerie.push(comentario)
   comentariosPorSerieId[req.params.id] = comentariosDaSerie
 
+  await axios.post('http://localhost:10000/eventos', {
+    tipo: 'ComentarioCriado',
+    dados: comentario
+  })
+
   res.status(201).send(comentariosDaSerie)
 })
 
+
 app.get('/series/:id/comentarios', function(req, res){
   res.json(comentariosPorSerieId[req.params.id] || [])
+})
+app.post('/eventos', (req, res) => {
+  try{
+    const evento = req.body
+    console.log(evento.tipo)
+  }
+  catch(e){}
+  res.end()
 })
 
 const port = 4100
