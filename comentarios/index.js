@@ -15,7 +15,8 @@ app.post('/series/:id/comentarios', async (req, res) => {
   const comentario = {
     id: idComentario,
     texto: texto,
-    serieId: req.params.id
+    serieId: req.params.id,
+    status: 'pendente'
   }
 
   const comentariosDaSerie = comentariosPorSerieId[req.params.id] || []
@@ -30,14 +31,34 @@ app.post('/series/:id/comentarios', async (req, res) => {
   res.status(201).send(comentariosDaSerie)
 })
 
-
 app.get('/series/:id/comentarios', function(req, res){
   res.json(comentariosPorSerieId[req.params.id] || [])
 })
+
+const funcoes = {
+  ComentarioModerado: (comentario) => {
+    const comentarios = comentariosPorSerieId[comentario.serieId]
+    const comentarioParaAtualizar = comentarios.find(c => c.id === comentario.id)
+
+    comentarioParaAtualizar.status = comentario.status
+
+    axios.post('http://localhost:10000/eventos', {
+      tipo: 'ComentarioAtualizado',
+      dados: {
+        id: comentarioParaAtualizar.id,
+        texto: comentarioParaAtualizar.texto,
+        serieId: comentarioParaAtualizar.serieId,
+        status: comentarioParaAtualizar.status
+      }
+    })
+  }
+}
+
 app.post('/eventos', (req, res) => {
   try{
     const evento = req.body
     console.log(evento.tipo)
+    funcoes[evento.tipo](evento.dados)
   }
   catch(e){}
   res.end()
