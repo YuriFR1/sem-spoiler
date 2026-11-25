@@ -1,4 +1,5 @@
 
+const HOST = 'localhost'
 const axios = require('axios')
 const express = require('express')
 const app = express()
@@ -47,7 +48,7 @@ app.get('/series/:id', (req, res) => {
   res.json(serie)
 })
 
-app.post('/eventos', function(req, res){
+app.post('/eventos', function(req, res) {
   try{
     const evento = req.body
     console.log(evento)
@@ -62,11 +63,11 @@ app.listen(port, async () => {
   console.log(`Consulta. Porta ${port}.`)
 
   try{
-    const resp = await axios.get('http://localhost:10000/eventos')
+    const resp = await axios.get(`http://${HOST}:10000/eventos`)
 
     resp.data.forEach((evento) => {
       try{
-    funcoes[evento.tipo](evento.dados)
+        funcoes[evento.tipo](evento.dados)
       }
       catch(e){}
     })

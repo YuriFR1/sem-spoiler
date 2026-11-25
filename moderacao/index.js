@@ -1,4 +1,5 @@
 
+const HOST = 'localhost'
 const express = require('express')
 const axios = require('axios')
 const app = express()
@@ -12,7 +13,7 @@ const moderarComentario = (comentario) => {
 
   comentario.status = palavraProibida ? 'spoiler' : 'liberado'
 
-  axios.post('http://localhost:10000/eventos', {
+  axios.post(`http://${HOST}:10000/eventos`, {
     tipo: 'ComentarioModerado',
     dados: comentario
   })
@@ -37,7 +38,7 @@ app.listen(port, async () => {
   console.log(`Moderação. Porta ${port}.`)
 
   try{
-    const resp = await axios.get('http://localhost:10000/eventos')
+const resp = await axios.get(`http://${HOST}:10000/eventos`)
 
     const ultimosEventos = {}
     const idsComentarios = []

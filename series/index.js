@@ -1,5 +1,5 @@
 
-
+const HOST = 'localhost'
 const axios = require('axios')
 const express = require('express')
 const app = express()
@@ -29,14 +29,15 @@ app.post('/series', async (req, res) => {
   series[id] = serie
   id++
 
-  await axios.post('http://localhost:10000/eventos', {
+  await axios.post(`http://${HOST}:10000/eventos`, {
     tipo: 'SerieCriada',
     dados: serie
   })
 
   res.status(201).send(serie)
 })
-app.get('/series', function(req, res){
+
+app.get('/series', function(req, res) {
   res.json(series)
 })
 

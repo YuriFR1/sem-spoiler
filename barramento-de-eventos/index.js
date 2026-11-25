@@ -1,4 +1,5 @@
 
+const HOST = 'localhost'
 const axios = require('axios')
 const express = require('express')
 const app = express()
@@ -14,20 +15,23 @@ app.post('/eventos', async (req, res) => {
   eventos.push(evento)
 
   try{
-    await axios.post('http://localhost:4000/eventos', evento)
-  }catch(e){}
+await axios.post(`http://${HOST}:4000/eventos`, evento)
+  }
+  catch(e){}
 
   try{
-    await axios.post('http://localhost:4100/eventos', evento)
-  }catch(e){}
+    await axios.post(`http://${HOST}:4100/eventos`, evento)
+  }
+  catch(e){}
 
   try{
-    await axios.post('http://localhost:4200/eventos', evento)
-  }catch(e){}
+    await axios.post(`http://${HOST}:4200/eventos`, evento)
+ }
+  catch(e){}
 
   try{
-    await axios.post('http://localhost:4300/eventos', evento)
-  }catch(e){}
+    await axios.post(`http://${HOST}:4300/eventos`, evento) }
+  catch(e){}
 
   res.end()
 })
